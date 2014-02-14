@@ -48,14 +48,14 @@ void StallableMotor::updateController() {
 			stallStart = -1;
 		} else if (time > stallTimeThreshold) {
 			if (this->stalled) {
-				this->stallCount++;
+				this->stalledCount++;
 			}
 			this->stalled = true;
 		}
 	} else {
 		this->stalled = false;
 		stallStart = -1;
-		this->stallCount = 0;
+		this->stalledCount = 0;
 	}
 
 	if (stalled) {

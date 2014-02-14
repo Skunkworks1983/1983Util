@@ -1,5 +1,5 @@
-#ifndef __STALLABLE_MOTOR_H_
-#define __STALLABLE_MOTOR_H_
+#ifndef __STALLABLE_MOTOR_H
+#define __STALLABLE_MOTOR_H
 #include "WPILib.h"
 
 class StallableMotor: public SpeedController {
