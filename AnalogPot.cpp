@@ -15,48 +15,48 @@ void Potentiometer::InitPotentiometer(uint8_t moduleNumber, uint32_t channel) {
 	this->c = 0;
 }
 
-void Potentiometer::UpdateTable() {
+void AnalogPot::UpdateTable() {
 	if (m_table != NULL) {
 		m_table->PutNumber("Value", GetAngle());
 	}
 }
 
-Potentiometer *Potentiometer::setVoltageToAngle(float a, float b, float c) {
+void AnalogPot::setVoltageToAngle(float a, float b, float c) {
 	this->a = a;
 	this->b = b;
 	this->c = c;
 	return this;
 }
 
-float Potentiometer::GetRawAngle() {
+float AnalogPot::GetRawAngle() {
 	float volts = backend->GetVoltage();
 	return (this->a * volts * volts) + (this->b*volts) + this->c;
 }
 
-float Potentiometer::GetAngle() {
+float AnalogPot::GetAngle() {
 	float volts = backend->GetAverageVoltage();
 	return (this->a * volts * volts) + (this->b*volts) + this->c;
 }
 
-double Potentiometer::PIDGet() {
+double AnalogPot::PIDGet() {
 	return GetAngle();
 }
 
-void Potentiometer::StartLiveWindowMode() {
+void AnalogPot::StartLiveWindowMode() {
 }
 
-void Potentiometer::StopLiveWindowMode() {
+void AnalogPot::StopLiveWindowMode() {
 }
 
-std::string Potentiometer::GetSmartDashboardType() {
+std::string AnalogPot::GetSmartDashboardType() {
 	return "Gyro";
 }
 
-void Potentiometer::InitTable(ITable *subTable) {
+void AnalogPot::InitTable(ITable *subTable) {
 	m_table = subTable;
 	UpdateTable();
 }
 
-ITable * Potentiometer::GetTable() {
+ITable * AnalogPot::GetTable() {
 	return m_table;
 }
