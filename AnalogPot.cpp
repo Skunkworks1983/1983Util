@@ -23,12 +23,6 @@ AnalogPot::AnalogPot(uint32_t channel) {
 	InitAnalogPot(GetDefaultAnalogModule(), channel);
 }
 
-void AnalogPot::UpdateTable() {
-	if (m_table != NULL) {
-		m_table->PutNumber("Value", GetAngle());
-	}
-}
-
 void AnalogPot::setVoltageToAngle(float a, float b, float c) {
 	this->a = a;
 	this->b = b;
@@ -37,12 +31,12 @@ void AnalogPot::setVoltageToAngle(float a, float b, float c) {
 
 float AnalogPot::GetRawAngle() {
 	float volts = backend->GetVoltage();
-	return (this->a * volts * volts) + (this->b*volts) + this->c;
+	return (this->a * volts * volts) + (this->b * volts) + this->c;
 }
 
 float AnalogPot::GetAngle() {
 	float volts = backend->GetAverageVoltage();
-	return (this->a * volts * volts) + (this->b*volts) + this->c;
+	return (this->a * volts * volts) + (this->b * volts) + this->c;
 }
 
 double AnalogPot::PIDGet() {
@@ -66,4 +60,10 @@ void AnalogPot::InitTable(ITable *subTable) {
 
 ITable * AnalogPot::GetTable() {
 	return m_table;
+}
+
+void AnalogPot::UpdateTable() {
+	if (m_table != NULL) {
+		m_table->PutNumber("Value", GetAngle());
+	}
 }

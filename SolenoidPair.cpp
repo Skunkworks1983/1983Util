@@ -44,11 +44,15 @@ void SolenoidPair::UpdateTable() {
 }
 
 void SolenoidPair::StartLiveWindowMode() {
-	m_table->AddTableListener("Value", this, true);
+	if (m_table != NULL) {
+		m_table->AddTableListener("Value", this, true);
+	}
 }
 
 void SolenoidPair::StopLiveWindowMode() {
-	m_table->RemoveTableListener(this);
+	if (m_table != NULL) {
+		m_table->RemoveTableListener(this);
+	}
 	Disable();
 }
 
