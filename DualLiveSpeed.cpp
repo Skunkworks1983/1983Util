@@ -36,12 +36,16 @@ void DualLiveSpeed::UpdateTable() {
 }
 
 void DualLiveSpeed::StartLiveWindowMode() {
-	m_table->AddTableListener("Value", this, true);
+	if (m_table != NULL) {
+		m_table->AddTableListener("Value", this, true);
+	}
 }
 
 void DualLiveSpeed::StopLiveWindowMode() {
 	Set(0);
-	m_table->RemoveTableListener(this);
+	if (m_table != NULL) {
+		m_table->RemoveTableListener(this);
+	}
 }
 
 std::string DualLiveSpeed::GetSmartDashboardType() {
