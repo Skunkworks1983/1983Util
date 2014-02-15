@@ -30,7 +30,7 @@ public:
 	 * @param PIDOutput1
 	 * @param PIDOutput2
 	 */
-	DualLiveSpeed(SpeedController *aA, SpeedController *bB, bool reverseB);
+	DualLiveSpeed(SpeedController *aA, SpeedController *bB = NULL, bool reverseB = false);
 	virtual ~DualLiveSpeed();
 	virtual void Set(float f, UINT8 syncGroup = 0);
 	virtual void PIDWrite(float f);

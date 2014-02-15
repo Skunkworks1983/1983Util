@@ -3,16 +3,22 @@
 #include "AnalogChannel.h"
 #include "LiveWindow/LiveWindow.h"
 
+#include "../Robotmap.h"
+#include "Time.h"
+
 void AnalogPot::InitAnalogPot(uint8_t moduleNumber, uint32_t channel) {
 	backend = new AnalogChannel(moduleNumber, channel);
 
-	LiveWindow::GetInstance()->AddSensor("Gyro", backend->GetModuleNumber(),
+	LiveWindow::GetInstance()->AddSensor("Encoder", backend->GetModuleNumber(),
 			backend->GetChannel(), this);
 
 	// Default to just voltage
 	this->a = 0;
 	this->b = 1;
 	this->c = 0;
+
+	pTime = GetAngle();
+	pAngle = getCurrentMillis();
 }
 
 AnalogPot::AnalogPot(uint8_t moduleNumber, uint32_t channel) {
@@ -39,6 +45,16 @@ float AnalogPot::GetAngle() {
 	return (this->a * volts * volts) + (this->b * volts) + this->c;
 }
 
+float AnalogPot::GetRate() {
+	float pAngle = this->pAngle;
+	this->pAngle = GetAngle();
+
+	float pTime = this->pTime;
+	this->pTime = getCurrentMillis();
+
+	return ((GetAngle()- pAngle)/(getCurrentMillis() - pTime));
+}
+
 double AnalogPot::PIDGet() {
 	return GetAngle();
 }
@@ -50,7 +66,7 @@ void AnalogPot::StopLiveWindowMode() {
 }
 
 std::string AnalogPot::GetSmartDashboardType() {
-	return "Gyro";
+	return "Encoder";
 }
 
 void AnalogPot::InitTable(ITable *subTable) {
@@ -64,6 +80,7 @@ ITable * AnalogPot::GetTable() {
 
 void AnalogPot::UpdateTable() {
 	if (m_table != NULL) {
-		m_table->PutNumber("Value", GetAngle());
+		m_table->PutNumber("Speed", GetRate());
+		m_table->PutNumber("Distance", GetAngle());
 	}
 }

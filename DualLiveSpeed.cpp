@@ -19,7 +19,8 @@ void DualLiveSpeed::ValueChanged(ITable* source, const std::string& key,
 }
 
 float DualLiveSpeed::Get() {
-	return (0.5 * a->Get()) + ((reverseB ? -0.5 : 0.5) * b->Get());
+	return (0.5 * a->Get())
+			+ (b != NULL ? (reverseB ? -0.5 : 0.5) * b->Get() : 0);
 }
 
 void DualLiveSpeed::Set(float f, UINT8 syncGroup) {

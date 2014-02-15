@@ -11,7 +11,8 @@ class AnalogPot : public PIDSource, public LiveWindowSendable, public SensorBase
 private:
 	AnalogChannel *backend;
 	float a, b, c;
-
+	
+	float pTime, pAngle;
 	ITable *m_table;
 
 	void InitAnalogPot(uint8_t moduleNumber, uint32_t channel);
@@ -25,10 +26,14 @@ public:
 	void setVoltageToAngle(float a, float b, float c);
 
 	float GetAngle();
+	
+	float GetRate();
+	bool GetStopped();
+	
 	float GetRawAngle();
 
 	double PIDGet();
-
+	
 	void UpdateTable();
 	void StartLiveWindowMode();
 	void StopLiveWindowMode();
