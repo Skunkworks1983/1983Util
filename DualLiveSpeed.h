@@ -6,13 +6,16 @@
  * Utility class that writes a single PID output value to two objects.
  * @author Westin Miller
  */
-class DualLiveSpeed : public ITableListener, public LiveWindowSendable,
-	public SpeedController {
+class DualLiveSpeed: public ITableListener,
+		public LiveWindowSendable,
+		public SpeedController {
 private:
 	SpeedController *a;
 	SpeedController *b;
+	bool reverseB;
 protected:
-	virtual void ValueChanged(ITable* source, const std::string& key, EntryValue value, bool isNew);
+	virtual void ValueChanged(ITable* source, const std::string& key,
+			EntryValue value, bool isNew);
 	virtual void UpdateTable();
 	virtual void StartLiveWindowMode();
 	virtual void StopLiveWindowMode();
@@ -27,9 +30,9 @@ public:
 	 * @param PIDOutput1
 	 * @param PIDOutput2
 	 */
-	DualLiveSpeed(SpeedController *aA, SpeedController *bB);
+	DualLiveSpeed(SpeedController *aA, SpeedController *bB, bool reverseB);
 	virtual ~DualLiveSpeed();
-	virtual void Set(float f, UINT8 syncGroup=0);
+	virtual void Set(float f, UINT8 syncGroup = 0);
 	virtual void PIDWrite(float f);
 	virtual float Get();
 	virtual void Disable();

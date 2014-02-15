@@ -1,8 +1,10 @@
 #include "DualLiveSpeed.h"
 
-DualLiveSpeed::DualLiveSpeed(SpeedController *aA, SpeedController *bB) {
+DualLiveSpeed::DualLiveSpeed(SpeedController *aA, SpeedController *bB,
+		bool reverseB) {
 	this->a = aA;
 	this->b = bB;
+	this->reverseB = reverseB;
 }
 
 DualLiveSpeed::~DualLiveSpeed() {
@@ -17,13 +19,13 @@ void DualLiveSpeed::ValueChanged(ITable* source, const std::string& key,
 }
 
 float DualLiveSpeed::Get() {
-	return a->Get();
+	return (0.5 * a->Get()) + ((reverseB ? -0.5 : 0.5) * b->Get());
 }
 
 void DualLiveSpeed::Set(float f, UINT8 syncGroup) {
-	a->Set(f);
+	a->Set(f, syncGroup);
 	if (b != NULL) {
-		b->Set(f);
+		b->Set(reverseB ? -f : f, syncGroup);
 	}
 }
 
