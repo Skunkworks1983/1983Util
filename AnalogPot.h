@@ -3,10 +3,11 @@
 
 #include "PIDSource.h"
 #include "LiveWindow/LiveWindowSendable.h"
+#include "SensorBase.h"
 
 class AnalogChannel;
 
-class AnalogPot : public PIDSource, public LiveWindowSendable {
+class AnalogPot : public PIDSource, public LiveWindowSendable, public SensorBase {
 private:
 	AnalogChannel *backend;
 	float a, b, c;

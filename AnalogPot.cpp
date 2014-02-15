@@ -1,9 +1,9 @@
-#include "Potentiometer.h"
+#include "AnalogPot.h"
 
 #include "AnalogChannel.h"
 #include "LiveWindow/LiveWindow.h"
 
-void Potentiometer::InitPotentiometer(uint8_t moduleNumber, uint32_t channel) {
+void AnalogPot::InitAnalogPot(uint8_t moduleNumber, uint32_t channel) {
 	backend = new AnalogChannel(moduleNumber, channel);
 
 	LiveWindow::GetInstance()->AddSensor("Gyro", backend->GetModuleNumber(),
@@ -13,6 +13,14 @@ void Potentiometer::InitPotentiometer(uint8_t moduleNumber, uint32_t channel) {
 	this->a = 0;
 	this->b = 1;
 	this->c = 0;
+}
+
+AnalogPot::AnalogPot(uint8_t moduleNumber, uint32_t channel) {
+	InitAnalogPot(moduleNumber, channel);
+}
+
+AnalogPot::AnalogPot(uint32_t channel) {
+	InitAnalogPot(GetDefaultAnalogModule(), channel);
 }
 
 void AnalogPot::UpdateTable() {
@@ -25,7 +33,6 @@ void AnalogPot::setVoltageToAngle(float a, float b, float c) {
 	this->a = a;
 	this->b = b;
 	this->c = c;
-	return this;
 }
 
 float AnalogPot::GetRawAngle() {
