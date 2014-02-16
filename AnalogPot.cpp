@@ -82,5 +82,6 @@ void AnalogPot::UpdateTable() {
 	if (m_table != NULL) {
 		m_table->PutNumber("Speed", GetRate());
 		m_table->PutNumber("Distance", GetAngle());
+        m_table->PutNumber("Distance per Tick", backend->GetAverageVoltage());
 	}
 }

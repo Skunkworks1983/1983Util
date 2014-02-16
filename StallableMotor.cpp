@@ -58,22 +58,24 @@ void StallableMotor::updateController() {
 	float rate = 0;
 	if (stallEncoder != NULL) {
 		rate = stallEncoder->GetRate();
-	} else if (stallPot!=NULL) {
+	} else if (stallPot != NULL) {
 		rate = stallPot->GetRate();
 	}
 
-	if (fabs(rate) < stallSpeed && fabs(cacheSpeed)> 0.0 && stallSpeed > 0) {
+	if (stallSpeed >= 0 && fabs(rate) < stallSpeed && fabs(cacheSpeed)> 0.0) {
 		double time = getCurrentMillis() - stallStart;
 		if (stallStart < 0.0) {
 			stallStart = getCurrentMillis();
 		} else if (time> stallTimeRefresh) {
 			this->stalled = false;
 			stallStart = -1;
+			printf("Stallable motor refresh.\n");
 		} else if (time> stallTimeThreshold) {
 			if (this->stalled) {
 				this->stalledCount++;
 			}
 			this->stalled = true;
+			printf("Stallable motor is stalled.\n");
 		}
 	} else {
 		this->stalled = false;
