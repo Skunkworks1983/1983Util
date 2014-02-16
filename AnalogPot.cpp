@@ -45,6 +45,9 @@ float AnalogPot::GetAngle() {
 	return (this->a * volts * volts) + (this->b * volts) + this->c;
 }
 
+/**
+ * Units per second
+ */
 float AnalogPot::GetRate() {
 	float pAngle = this->pAngle;
 	this->pAngle = GetAngle();
@@ -52,7 +55,7 @@ float AnalogPot::GetRate() {
 	float pTime = this->pTime;
 	this->pTime = getCurrentMillis();
 
-	return ((GetAngle()- pAngle)/(getCurrentMillis() - pTime));
+	return (1000.0*(GetAngle()- pAngle)/(getCurrentMillis() - pTime));
 }
 
 double AnalogPot::PIDGet() {
@@ -82,6 +85,6 @@ void AnalogPot::UpdateTable() {
 	if (m_table != NULL) {
 		m_table->PutNumber("Speed", GetRate());
 		m_table->PutNumber("Distance", GetAngle());
-        m_table->PutNumber("Distance per Tick", backend->GetAverageVoltage());
+		m_table->PutNumber("Distance per Tick", backend->GetAverageVoltage());
 	}
 }
