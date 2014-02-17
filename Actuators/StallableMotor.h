@@ -1,7 +1,7 @@
 #ifndef __STALLABLE_MOTOR_H
 #define __STALLABLE_MOTOR_H
 #include "WPILib.h"
-#include "AnalogPot.h"
+#include "../Sensors/AnalogPot.h"
 
 class StallableMotor : public SpeedController {
 private:

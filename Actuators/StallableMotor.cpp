@@ -1,7 +1,7 @@
 #include "StallableMotor.h"
 #include <math.h>
 #include <vector>
-#include "Time.h"
+#include "../Time.h"
 
 std::vector<StallableMotor*> StallableMotor::motors = std::vector<StallableMotor*>();
 

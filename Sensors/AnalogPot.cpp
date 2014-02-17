@@ -3,8 +3,7 @@
 #include "AnalogChannel.h"
 #include "LiveWindow/LiveWindow.h"
 
-#include "../Robotmap.h"
-#include "Time.h"
+#include "../Time.h"
 
 void AnalogPot::InitAnalogPot(uint8_t moduleNumber, uint32_t channel) {
 	backend = new AnalogChannel(moduleNumber, channel);

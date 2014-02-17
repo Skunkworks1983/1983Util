@@ -1,12 +1,14 @@
 #ifndef __1983_UTIL_H
 #ifndef __1983_UTIL_H
 
-#include "AnalogRangeButton.h"
-#include "DualLiveSpeed.h"
+#include "Buttons/AnalogRangeButton.h"
+#include "Buttons/OverridableButton.h"
+#include "Buttons/CompositeButton.h"
+#include "Actuators/DualLiveSpeed.h"
 #include "Math.h"
-#include "SolenoidPair.h"
-#include "StallableMotor.h"
+#include "Actuators/SolenoidPair.h"
+#include "Actuators/StallableMotor.h"
 #include "Time.h"
-#include "ValueChangeTrigger.h"
+#include "Buttons/ValueChangeTrigger.h"
 
 #endif
