@@ -12,6 +12,11 @@ private:
 	double changeThreshold;
 	double lastValue;
 public:
+	/**
+	 * @brief ¯\_(@_@)_/¯
+	 * @param getValue
+	 * @param changeThreshold
+	 */
 	ValueChangeTrigger(GET_DOUBLE getValue, double changeThreshold);
 	virtual ~ValueChangeTrigger();
 	virtual bool Get();

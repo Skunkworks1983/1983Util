@@ -20,6 +20,12 @@ public:
 	static std::vector<StallableMotor*> motors;
 	static void updateControllers();
 
+	/**
+	 * @brief Keeps the magic smoke in the motors
+	 * @param backend
+	 * @param stallSpeed (=0)
+	 * 
+	 */
 	StallableMotor(SpeedController *backend, double stallSpeed = 0,
 			double stallTimeTreshold = 100, double stallTimeRefresh = 1000);
 	
