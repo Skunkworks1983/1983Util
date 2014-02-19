@@ -11,6 +11,12 @@ private:
 	Command *orders;
 	bool waitForRequirements;
 public:
+	/*
+	 * @brief Provides a way to start the command in an ordered way through 
+	 * the command and the ready state
+	 * @param createFunc The command being stopped or started
+	 * @param waitForRequirements The state of being ready or not
+	 */
 	CommandStarter(CreateCommand createFunc, bool waitForRequirements = false);
 	~CommandStarter();
 	virtual void Initialize();

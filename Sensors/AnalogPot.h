@@ -17,6 +17,12 @@ private:
 
 	void InitAnalogPot(uint8_t moduleNumber, uint32_t channel);
 public:
+	/*
+	 * @brief Is a replacement to the potentiometer in WPILib, adds 
+	 * functionality to livewindow and scaling factors
+	 * @param moduleNumber The digital sidecar it's on
+	 * @param channel The channel number of the pot
+	 */
 	AnalogPot(uint8_t moduleNumber, uint32_t channel);
 	AnalogPot(uint32_t channel);
 

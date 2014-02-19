@@ -8,6 +8,10 @@ class CommandCanceler: public Command {
 private:
 	Command *cancel;
 public:
+	/*
+	 * @brief This utility stops the command that it is given
+	 * @param cancel is the command that is going to be canceled
+	 */
 	CommandCanceler(Command *cancel);
 	~CommandCanceler();
 	virtual void Initialize();
