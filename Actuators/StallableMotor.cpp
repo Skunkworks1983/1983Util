@@ -62,7 +62,7 @@ void StallableMotor::updateController() {
 		rate = stallPot->GetRate();
 	}
 
-	if (stallSpeed >= 0 && fabs(rate) < stallSpeed && fabs(cacheSpeed)> 0.0) {
+	if (stallSpeed >= 0 && fabs(rate) <= stallSpeed && fabs(cacheSpeed)> 0.0) {
 		double time = getCurrentMillis() - stallStart;
 		if (stallStart < 0.0) {
 			stallStart = getCurrentMillis();

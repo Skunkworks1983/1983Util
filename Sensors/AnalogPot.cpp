@@ -18,6 +18,9 @@ void AnalogPot::InitAnalogPot(uint8_t moduleNumber, uint32_t channel) {
 
 	pTime = GetAngle();
 	pAngle = getCurrentMillis();
+	for (int i = 0; i < ANALOG_POT_AVERAGE_LENGTH; i++) {
+		this->pRate[i] = 0;
+	}
 }
 
 AnalogPot::AnalogPot(uint8_t moduleNumber, uint32_t channel) {
@@ -54,7 +57,21 @@ float AnalogPot::GetRate() {
 	float pTime = this->pTime;
 	this->pTime = getCurrentMillis();
 
-	return (1000.0*(GetAngle()- pAngle)/(getCurrentMillis() - pTime));
+	float totalRate = 0;
+	float totalCounts = 0;
+	for (int i = 1; i < ANALOG_POT_AVERAGE_LENGTH; i++) {
+		this->pRate[i - 1] = this->pRate[i];
+		totalCounts += i;
+		totalRate += this->pRate[i - 1] * (float) i;
+	}
+	{
+		this->pRate[ANALOG_POT_AVERAGE_LENGTH - 1] = (1000.0 * (GetAngle()
+				- pAngle) / (getCurrentMillis() - pTime));
+		totalRate += this->pRate[ANALOG_POT_AVERAGE_LENGTH - 1]
+				* (float) ANALOG_POT_AVERAGE_LENGTH;
+		totalCounts += ((float) ANALOG_POT_AVERAGE_LENGTH);
+	}
+	return totalRate / totalCounts;
 }
 
 double AnalogPot::PIDGet() {

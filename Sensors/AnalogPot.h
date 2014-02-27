@@ -7,12 +7,15 @@
 
 class AnalogChannel;
 
+#define ANALOG_POT_AVERAGE_LENGTH 4
+
 class AnalogPot : public PIDSource, public LiveWindowSendable, public SensorBase {
 private:
 	AnalogChannel *backend;
 	float a, b, c;
 	
 	float pTime, pAngle;
+	float pRate[ANALOG_POT_AVERAGE_LENGTH];
 	ITable *m_table;
 
 	void InitAnalogPot(uint8_t moduleNumber, uint32_t channel);
