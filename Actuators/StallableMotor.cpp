@@ -3,7 +3,8 @@
 #include <vector>
 #include "../Time.h"
 
-std::vector<StallableMotor*> StallableMotor::motors = std::vector<StallableMotor*>();
+std::vector<StallableMotor*> StallableMotor::motors = std::vector<
+		StallableMotor*>();
 
 StallableMotor::StallableMotor(SpeedController *backend, double stallSpeed,
 		double stallTimeThreshold, double stallTimeRefresh) {
@@ -62,15 +63,16 @@ void StallableMotor::updateController() {
 		rate = stallPot->GetRate();
 	}
 
-	if (stallSpeed >= 0 && fabs(rate) <= stallSpeed && fabs(cacheSpeed)> 0.0) {
+	if (stallSpeed >= 0 && fabs(rate) <= stallSpeed && fabs(cacheSpeed) > 0.0) {
 		double time = getCurrentMillis() - stallStart;
 		if (stallStart < 0.0) {
 			stallStart = getCurrentMillis();
-		} else if (time> stallTimeRefresh) {
+		} else if (time > stallTimeRefresh) {
 			this->stalled = false;
+			this->cacheSpeed /= 2.0;
 			stallStart = -1;
 			printf("Stallable motor refresh.\n");
-		} else if (time> stallTimeThreshold) {
+		} else if (time > stallTimeThreshold) {
 			if (this->stalled) {
 				this->stalledCount++;
 			}
