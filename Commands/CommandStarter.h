@@ -10,6 +10,8 @@ private:
 	CreateCommand create;
 	Command *orders;
 	bool waitForRequirements;
+	double maxWait;
+	double startTime;
 public:
 	/*
 	 * @brief Provides a way to start the command in an ordered way through 
@@ -17,7 +19,7 @@ public:
 	 * @param createFunc The command being stopped or started
 	 * @param waitForRequirements The state of being ready or not
 	 */
-	CommandStarter(CreateCommand createFunc, bool waitForRequirements = false);
+	CommandStarter(CreateCommand createFunc, bool waitForRequirements = false, double maxWait = -1);
 	~CommandStarter();
 	virtual void Initialize();
 	virtual void Execute();

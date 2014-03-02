@@ -3,11 +3,14 @@
 #include "Commands/Command.h"
 #include "Commands/Subsystem.h"
 #include "Commands/Scheduler.h"
+#include "../../Utils/Time.h"
 
-CommandStarter::CommandStarter(CreateCommand create, bool waitForRequirements) :
+CommandStarter::CommandStarter(CreateCommand create, bool waitForRequirements,
+		double maxWait) :
 	Command("CommandStarter") {
 	this->create = create;
 	this->waitForRequirements = waitForRequirements;
+	this->maxWait = maxWait;
 }
 
 CommandStarter::~CommandStarter() {
@@ -15,6 +18,7 @@ CommandStarter::~CommandStarter() {
 
 void CommandStarter::Initialize() {
 	this->orders = create();
+	this->startTime = getCurrentMillis();
 }
 
 void CommandStarter::Execute() {
@@ -35,7 +39,8 @@ void CommandStarter::Execute() {
 }
 
 bool CommandStarter::IsFinished() {
-	return orders == NULL;
+	return (maxWait > 0 && getCurrentMillis() > (startTime + maxWait))
+			|| orders == NULL;
 }
 
 void CommandStarter::End() {
