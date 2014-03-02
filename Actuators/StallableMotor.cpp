@@ -67,7 +67,7 @@ void StallableMotor::updateController() {
 		double time = getCurrentMillis() - stallStart;
 		if (stallStart < 0.0) {
 			stallStart = getCurrentMillis();
-		} else if (time > stallTimeRefresh) {
+		} else if (time > stallTimeRefresh && stallTimeRefresh > 0) {
 			this->stalled = false;
 			this->cacheSpeed /= 2.0;
 			stallStart = -1;

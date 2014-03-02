@@ -7,7 +7,8 @@
 
 class AnalogChannel;
 
-#define ANALOG_POT_AVERAGE_LENGTH 4
+#define ANALOG_POT_AVERAGE_LENGTH (5)
+#define ANALOG_POT_RATE_SAMPLE_PERIOD (50.0)
 
 class AnalogPot : public PIDSource, public LiveWindowSendable, public SensorBase {
 private:

@@ -55,21 +55,29 @@ float AnalogPot::GetRate() {
 	this->pAngle = GetAngle();
 
 	float pTime = this->pTime;
+	if (getCurrentMillis() - this->pTime < ANALOG_POT_RATE_SAMPLE_PERIOD) {
+		float totalRate = 0;
+		float totalCounts = 0;
+		for (int i = 0; i < ANALOG_POT_AVERAGE_LENGTH; i++) {
+			totalCounts++;
+			totalRate += this->pRate[i];
+		}
+		return totalRate / totalCounts;
+	}
 	this->pTime = getCurrentMillis();
 
 	float totalRate = 0;
 	float totalCounts = 0;
 	for (int i = 1; i < ANALOG_POT_AVERAGE_LENGTH; i++) {
 		this->pRate[i - 1] = this->pRate[i];
-		totalCounts += i;
-		totalRate += this->pRate[i - 1] * (float) i;
+		totalCounts++;
+		totalRate += this->pRate[i - 1];
 	}
 	{
 		this->pRate[ANALOG_POT_AVERAGE_LENGTH - 1] = (1000.0 * (GetAngle()
-				- pAngle) / (getCurrentMillis() - pTime));
-		totalRate += this->pRate[ANALOG_POT_AVERAGE_LENGTH - 1]
-				* (float) ANALOG_POT_AVERAGE_LENGTH;
-		totalCounts += ((float) ANALOG_POT_AVERAGE_LENGTH);
+				- pAngle) / (this->pTime - pTime));
+		totalRate += this->pRate[ANALOG_POT_AVERAGE_LENGTH - 1];
+		totalCounts++;
 	}
 	return totalRate / totalCounts;
 }
