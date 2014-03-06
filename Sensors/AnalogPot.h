@@ -17,6 +17,7 @@ private:
 	
 	float pTime, pAngle;
 	float pRate[ANALOG_POT_AVERAGE_LENGTH];
+	
 	ITable *m_table;
 
 	void InitAnalogPot(uint8_t moduleNumber, uint32_t channel);
@@ -43,6 +44,8 @@ public:
 	float GetRawAngle();
 
 	double PIDGet();
+	
+	void SetAverageBits(int bits);
 	
 	void UpdateTable();
 	void StartLiveWindowMode();

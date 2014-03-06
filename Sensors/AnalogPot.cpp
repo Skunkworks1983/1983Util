@@ -37,6 +37,10 @@ void AnalogPot::setVoltageToAngle(float a, float b, float c) {
 	this->c = c;
 }
 
+void AnalogPot::SetAverageBits(int bits) {
+	this->backend->SetAverageBits(bits);
+}
+
 float AnalogPot::GetRawAngle() {
 	float volts = backend->GetVoltage();
 	return (this->a * volts * volts) + (this->b * volts) + this->c;
