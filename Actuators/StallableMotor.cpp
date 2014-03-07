@@ -17,7 +17,13 @@ StallableMotor::StallableMotor(SpeedController *backend, double stallSpeed,
 	this->stalled = false;
 	this->stalledCount = 0;
 	this->stallSpeed = stallSpeed;
+	this->name = "";
 	StallableMotor::motors.push_back(this);
+}
+
+StallableMotor *StallableMotor::setName(char *name) {
+	this->name = name;
+	return this;
 }
 
 StallableMotor *StallableMotor::setEncoderSource(Encoder *enc) {
@@ -71,13 +77,13 @@ void StallableMotor::updateController() {
 			this->stalled = false;
 			this->cacheSpeed /= 2.0;
 			stallStart = -1;
-			printf("Stallable motor refresh.\n");
+			printf("Stallable motor \"%s\" refresh.\n", this->name);
 		} else if (time > stallTimeThreshold) {
 			if (this->stalled) {
 				this->stalledCount++;
 			}
 			this->stalled = true;
-			printf("Stallable motor is stalled.\n");
+			printf("Stallable motor \"%s\" is stalled.\n", this->name);
 		}
 	} else {
 		this->stalled = false;

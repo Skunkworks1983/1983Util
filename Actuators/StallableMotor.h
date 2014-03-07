@@ -16,6 +16,8 @@ private:
 	double stallSpeed;
 	bool stalled;
 	int stalledCount;
+	
+	char *name;
 public:
 	static std::vector<StallableMotor*> motors;
 	static void updateControllers();
@@ -29,6 +31,7 @@ public:
 	StallableMotor(SpeedController *backend, double stallSpeed = 0,
 			double stallTimeTreshold = 100, double stallTimeRefresh = 1000);
 	
+	StallableMotor *setName(char *name);
 	StallableMotor *setPotSource(AnalogPot *pot);
 	StallableMotor *setEncoderSource(Encoder *pot);
 	~StallableMotor();
