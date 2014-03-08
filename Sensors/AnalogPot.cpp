@@ -16,11 +16,14 @@ void AnalogPot::InitAnalogPot(uint8_t moduleNumber, uint32_t channel) {
 	this->b = 1;
 	this->c = 0;
 
-	pTime = GetAngle();
-	pAngle = getCurrentMillis();
+	pAngle = GetAngle();
+	pTime = getCurrentMillis();
 	for (int i = 0; i < ANALOG_POT_AVERAGE_LENGTH; i++) {
 		this->pRate[i] = 0;
 	}
+
+	accel = 0.0;
+	pAverageRate = 0.0;
 }
 
 AnalogPot::AnalogPot(uint8_t moduleNumber, uint32_t channel) {
@@ -46,20 +49,23 @@ float AnalogPot::GetRawAngle() {
 	return (this->a * volts * volts) + (this->b * volts) + this->c;
 }
 
-float AnalogPot::GetAngle() {
+float AnalogPot::GetAngle(float ffwd) {
 	float volts = backend->GetAverageVoltage();
-	return (this->a * volts * volts) + (this->b * volts) + this->c;
+	float angle = (this->a * volts * volts) + (this->b * volts) + this->c;
+	if (ffwd > 0.0) {
+		angle += (pAverageRate + (accel * ffwd)) * ffwd;
+	}
+	return angle;
 }
 
 /**
  * Units per second
  */
 float AnalogPot::GetRate() {
-	float pAngle = this->pAngle;
-	this->pAngle = GetAngle();
+	float angle = GetAngle(0.0);
+	float time = getCurrentMillis();
 
-	float pTime = this->pTime;
-	if (getCurrentMillis() - this->pTime < ANALOG_POT_RATE_SAMPLE_PERIOD) {
+	if (time - this->pTime < ANALOG_POT_RATE_SAMPLE_PERIOD) {
 		float totalRate = 0;
 		float totalCounts = 0;
 		for (int i = 0; i < ANALOG_POT_AVERAGE_LENGTH; i++) {
@@ -68,7 +74,6 @@ float AnalogPot::GetRate() {
 		}
 		return totalRate / totalCounts;
 	}
-	this->pTime = getCurrentMillis();
 
 	float totalRate = 0;
 	float totalCounts = 0;
@@ -78,11 +83,17 @@ float AnalogPot::GetRate() {
 		totalRate += this->pRate[i - 1];
 	}
 	{
-		this->pRate[ANALOG_POT_AVERAGE_LENGTH - 1] = (1000.0 * (GetAngle()
-				- pAngle) / (this->pTime - pTime));
+		this->pRate[ANALOG_POT_AVERAGE_LENGTH - 1] = (1000.0 * (angle - pAngle)
+				/ (time - pTime));
 		totalRate += this->pRate[ANALOG_POT_AVERAGE_LENGTH - 1];
 		totalCounts++;
 	}
+	accel = 1000.0 * ((totalRate / totalCounts) - pAverageRate)
+			/ (time - pTime);
+	pAverageRate = totalRate / totalCounts;
+
+	this->pTime = time;
+	this->pAngle = angle;
 	return totalRate / totalCounts;
 }
 

@@ -18,6 +18,9 @@ private:
 	float pTime, pAngle;
 	float pRate[ANALOG_POT_AVERAGE_LENGTH];
 	
+	float pAverageRate;
+	float accel;
+	
 	ITable *m_table;
 
 	void InitAnalogPot(uint8_t moduleNumber, uint32_t channel);
@@ -36,7 +39,7 @@ public:
 	 */
 	void setVoltageToAngle(float a, float b, float c);
 
-	float GetAngle();
+	float GetAngle(float ffwd = 0.0);
 	
 	float GetRate();
 	bool GetStopped();
