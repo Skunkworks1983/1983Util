@@ -53,7 +53,7 @@ float AnalogPot::GetAngle(float ffwd) {
 	float volts = backend->GetAverageVoltage();
 	float angle = (this->a * volts * volts) + (this->b * volts) + this->c;
 	if (ffwd > 0.0) {
-		angle += (pAverageRate + (accel * ffwd)) * ffwd;
+		angle += (pAverageRate + (accel * 0.5 * ffwd)) * ffwd;
 	}
 	return angle;
 }
