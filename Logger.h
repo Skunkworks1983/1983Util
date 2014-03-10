@@ -1,8 +1,10 @@
 #ifndef LOGGER_H_
 #define LOGGER_H_
-
+// CSTDLIB
 #include <stdarg.h>
 #include <stdlib.h>
+
+class SendableChooser;
 
 class Logger {
 public:
@@ -11,6 +13,7 @@ public:
 	};
 private:
 	static Level minLogLevel;
+	static SendableChooser *chooser;
 	Logger();
 	virtual ~Logger();
 	inline static char* logLevelToName(Level level) {
@@ -40,6 +43,7 @@ public:
 		minLogLevel = level;
 	}
 	static void log(Level level, char *src, char *fmt, ...);
+	static void createLogLevelChooser();
 };
 
 #endif /* LOGGER_H_ */
