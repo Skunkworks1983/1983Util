@@ -43,7 +43,7 @@ public:
 		minLogLevel = level;
 	}
 	static void log(Level level, char *src, char *fmt, ...);
-	static void createLogLevelChooser();
+	static SendableChooser *createLogLevelChooser();
 };
 
 #endif /* LOGGER_H_ */

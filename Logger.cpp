@@ -32,14 +32,13 @@ void Logger::log(Level level, char *src, char *fmt, ...) {
 	}
 }
 
-void Logger::createLogLevelChooser() {
-	if (chooser != NULL) {
-		return;
+SendableChooser *Logger::createLogLevelChooser() {
+	if (chooser == NULL) {
+		chooser = new SendableChooser();
+		for (int l = Logger::kSevere; l < Logger::kFinest; l++) {
+			chooser->AddObject(logLevelToName((Logger::Level) l), new int(l));
+		}
+		chooser->AddDefault(logLevelToName(Logger::kFinest), new int(Logger::kFinest));
 	}
-	chooser = new SendableChooser();
-	for (int l = Logger::kSevere; l < Logger::kFinest; l++) {
-		chooser->AddObject(logLevelToName((Logger::Level) l), new int(l));
-	}
-	chooser->AddDefault(logLevelToName(Logger::kFinest),
-			new int(Logger::kFinest));
+	return chooser;
 }
