@@ -31,7 +31,7 @@ public:
 	SolenoidPair(UINT8 m, UINT32 a, UINT32 b);
 	virtual ~SolenoidPair();
 	virtual void Set(bool state);
-	virtual bool Get();
+	virtual int Get();
 	void Disable();
 };
 

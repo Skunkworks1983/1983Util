@@ -27,8 +27,14 @@ void SolenoidPair::ValueChanged(ITable* source, const std::string& key,
 		Disable();
 }
 
-bool SolenoidPair::Get() {
-	return a->Get();
+int SolenoidPair::Get() {
+	if (a->Get() && !b->Get()) {
+		return true;
+	} else if (b->Get() && !a->Get()) {
+		return false;
+	} else {
+		return -1;
+	}
 }
 
 void SolenoidPair::Set(bool v) {
@@ -38,8 +44,8 @@ void SolenoidPair::Set(bool v) {
 
 void SolenoidPair::UpdateTable() {
 	if (m_table != NULL) {
-		m_table->PutString("Value",
-				a->Get() ? "Forward" : (b->Get() ? "Reverse" : "Off"));
+		m_table->PutString("Value", a->Get() ? "Forward"
+				: (b->Get() ? "Reverse" : "Off"));
 	}
 }
 
