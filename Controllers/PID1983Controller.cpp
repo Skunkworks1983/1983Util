@@ -9,6 +9,7 @@
 #include "Notifier.h"
 #include "PIDSource.h"
 #include "PIDOutput.h"
+#include "Timer.h"
 #include <math.h>
 #include "Synchronized.h"
 
@@ -33,6 +34,7 @@ PID1983Controller::PID1983Controller(float Kp, float Ki, float Kd,
 		PIDSource *source, PIDOutput *output, float period) :
 	m_semaphore(0) {
 	Initialize(Kp, Ki, Kd, 0.0f, source, output, period);
+	Timer::GetFPGATimestamp();
 }
 
 /**
@@ -94,6 +96,7 @@ void PID1983Controller::Initialize(float Kp, float Ki, float Kd, float Kf,
 	m_toleranceType = kNoTolerance;
 
 	m_maximumITerm = -1;
+	m_lastTick = 0;
 }
 
 /**
@@ -135,58 +138,67 @@ void PID1983Controller::Calculate() {
 	END_REGION;
 
 	if (enabled) {
-		float input = pidInput->PIDGet();
-		float result;
-		PIDOutput *pidOutput;
+		double cTime = Timer::GetFPGATimestamp();
+		if (m_lastTick > 0) {
+			double tickDifference = cTime - m_lastTick;
+			double tickScaling = tickDifference / m_period;
 
-		{
-			Synchronized sync(m_semaphore);
-			m_error = m_setpoint - input;
-			if (m_continuous) {
-				if (fabs(m_error) > (m_maximumInput - m_minimumInput) / 2) {
-					if (m_error > 0) {
-						m_error = m_error - m_maximumInput + m_minimumInput;
-					} else {
-						m_error = m_error + m_maximumInput - m_minimumInput;
+			float input = pidInput->PIDGet();
+			float result;
+			PIDOutput *pidOutput;
+
+			{
+				Synchronized sync(m_semaphore);
+				m_error = m_setpoint - input;
+				if (m_continuous) {
+					if (fabs(m_error) > (m_maximumInput - m_minimumInput) / 2) {
+						if (m_error > 0) {
+							m_error = m_error - m_maximumInput + m_minimumInput;
+						} else {
+							m_error = m_error + m_maximumInput - m_minimumInput;
+						}
 					}
 				}
-			}
 
-			if (m_I != 0) {
-				double potentialIGain = (m_totalError + m_error) * m_I;
-				if (m_maximumITerm < 0) {
-					if (potentialIGain < m_maximumOutput) {
-						if (potentialIGain > m_minimumOutput)
-							m_totalError += m_error;
-						else
-							m_totalError = m_minimumOutput / m_I;
+				if (m_I != 0) {
+					double potentialIGain = (m_totalError + (m_error
+							*tickScaling)) * m_I;
+					if (m_maximumITerm < 0) {
+						if (potentialIGain < m_maximumOutput) {
+							if (potentialIGain > m_minimumOutput)
+								m_totalError += (m_error*tickScaling);
+							else
+								m_totalError = m_minimumOutput / m_I;
+						} else {
+							m_totalError = m_maximumOutput / m_I;
+						}
 					} else {
-						m_totalError = m_maximumOutput / m_I;
-					}
-				} else {
-					if (fabs(potentialIGain) > m_maximumITerm) {
-						m_totalError = (m_maximumITerm / m_I) * (potentialIGain
-								< 0 ? -1.0 : 1.0);
-					} else {
-						m_totalError += m_error;
+						if (fabs(potentialIGain) > m_maximumITerm) {
+							m_totalError = (m_maximumITerm / m_I)
+									* (potentialIGain < 0 ? -1.0 : 1.0);
+						} else {
+							m_totalError += (m_error*tickScaling);
+						}
 					}
 				}
+
+				m_result = m_P * m_error + m_I * m_totalError + m_D * ((m_error
+						- m_prevError)/tickScaling) + m_setpoint * m_F;
+				m_prevError = m_error;
+
+				if (m_result > m_maximumOutput)
+					m_result = m_maximumOutput;
+				else if (m_result < m_minimumOutput)
+					m_result = m_minimumOutput;
+
+				pidOutput = m_pidOutput;
+				result = m_result;
 			}
-
-			m_result = m_P * m_error + m_I * m_totalError + m_D * (m_error
-					- m_prevError) + m_setpoint * m_F;
-			m_prevError = m_error;
-
-			if (m_result > m_maximumOutput)
-				m_result = m_maximumOutput;
-			else if (m_result < m_minimumOutput)
-				m_result = m_minimumOutput;
-
-			pidOutput = m_pidOutput;
-			result = m_result;
+			pidOutput->PIDWrite(result);
 		}
-
-		pidOutput->PIDWrite(result);
+		m_lastTick = cTime;
+	} else {
+		m_lastTick = 0;
 	}
 }
 

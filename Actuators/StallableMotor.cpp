@@ -2,9 +2,10 @@
 #include <math.h>
 #include <vector>
 #include "../Time.h"
+#include "../Logger.h"
 
 std::vector<StallableMotor*> StallableMotor::motors = std::vector<
-		StallableMotor*>();
+StallableMotor*>();
 
 StallableMotor::StallableMotor(SpeedController *backend, double stallSpeed,
 		double stallTimeThreshold, double stallTimeRefresh) {
@@ -77,13 +78,16 @@ void StallableMotor::updateController() {
 			this->stalled = false;
 			this->cacheSpeed /= 2.0;
 			stallStart = -1;
-			printf("Stallable motor \"%s\" refresh.\n", this->name);
+			Logger::log(Logger::kWarning, "\"%s\" refreshed.\n", this->name);
 		} else if (time > stallTimeThreshold) {
-			if (this->stalled) {
+			if (!this->stalled) {
 				this->stalledCount++;
 			}
+			if (!this->stalled) {
+				Logger::log(Logger::kWarning, "\"%s\" is now stalled.\n",
+						this->name);
+			}
 			this->stalled = true;
-			printf("Stallable motor \"%s\" is stalled.\n", this->name);
 		}
 	} else {
 		this->stalled = false;

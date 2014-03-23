@@ -85,6 +85,8 @@ private:
 	float m_result;
 	float m_period;
 	
+	double m_lastTick;
+	
 	SEM_ID m_semaphore;
 	
 	PIDSource *m_pidInput;
