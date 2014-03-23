@@ -78,14 +78,15 @@ void StallableMotor::updateController() {
 			this->stalled = false;
 			this->cacheSpeed /= 2.0;
 			stallStart = -1;
-			Logger::log(Logger::kWarning, "\"%s\" refreshed.\n", this->name);
+			Logger::log(Logger::kWarning, "Stallable", "\"%s\" refreshed.",
+					this->name);
 		} else if (time > stallTimeThreshold) {
 			if (!this->stalled) {
 				this->stalledCount++;
 			}
 			if (!this->stalled) {
-				Logger::log(Logger::kWarning, "\"%s\" is now stalled.\n",
-						this->name);
+				Logger::log(Logger::kWarning, "Stallable",
+						"\"%s\" is now stalled.", this->name);
 			}
 			this->stalled = true;
 		}
