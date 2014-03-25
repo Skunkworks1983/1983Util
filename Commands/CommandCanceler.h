@@ -12,7 +12,7 @@ public:
 	 * @brief This utility stops the command that it is given
 	 * @param cancel is the command that is going to be canceled
 	 */
-	CommandCanceler(Command *cancel);
+	CommandCanceler(Command *cancel, double delay = 0.0);
 	~CommandCanceler();
 	virtual void Initialize();
 	virtual void Execute();
