@@ -8,41 +8,43 @@ class SendableChooser;
 
 class Logger {
 public:
-	enum Level {
-		kSevere, kWarning, kDiagnostic, kInfo, kConfig, kFine, kFiner, kFinest
-	};
+	static int kSevere;
+	static int kWarning;
+	static int kDiagnostic;
+	static int kInfo;
+	static int kConfig;
+	static int kFine;
+	static int kFiner;
+	static int kFinest;
 private:
-	static Level minLogLevel;
+	static int minLogLevel;
 	static SendableChooser *chooser;
 	Logger();
 	virtual ~Logger();
-	inline static char* logLevelToName(Level level) {
-		switch (level) {
-		case kSevere:
+	static char* logLevelToName(int level) {
+		if (level==kSevere)
 			return "SEVERE";
-		case kWarning:
+		if (level==kWarning)
 			return "WARNING";
-		case kDiagnostic:
+		if (level==kDiagnostic)
 			return "DIAG";
-		case kInfo:
+		if (level==kInfo)
 			return "INFO";
-		case kConfig:
+		if (level==kConfig)
 			return "CONFIG";
-		case kFine:
+		if (level==kFine)
 			return "FINE";
-		case kFiner:
+		if (level==kFiner)
 			return "FINER";
-		case kFinest:
+		if (level==kFinest)
 			return "FINEST";
-		default:
-			return "UNKNOWN";
-		}
+		return "UNKNOWN";
 	}
 public:
-	static inline void setLoggingLevel(Level level) {
+	static inline void setLoggingLevel(int level) {
 		minLogLevel = level;
 	}
-	static void log(Level level, char *src, char *fmt, ...);
+	static void log(int level, char *src, char *fmt, ...);
 	static SendableChooser *createLogLevelChooser();
 };
 

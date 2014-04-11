@@ -5,8 +5,18 @@
 // WPILib
 #include "SmartDashboard/SendableChooser.h"
 
-Logger::Level Logger::minLogLevel = Logger::kFinest;
-SendableChooser *Logger::chooser = NULL;
+SendableChooser *Logger::chooser= NULL;
+
+int Logger::minLogLevel = 8;
+
+int Logger::kSevere=1;
+int Logger::kWarning=2;
+int Logger::kDiagnostic=3;
+int Logger::kInfo=4;
+int Logger::kConfig=5;
+int Logger::kFine=6;
+int Logger::kFiner=7;
+int Logger::kFinest=8;
 
 Logger::Logger() {
 }
@@ -14,11 +24,15 @@ Logger::Logger() {
 Logger::~Logger() {
 }
 
-void Logger::log(Level level, char *src, char *fmt, ...) {
+void Logger::log(int level, char *src, char *fmt, ...) {
 	if (chooser != NULL) {
 		int *obj = (int*) chooser->GetSelected();
 		if (obj != NULL) {
-			minLogLevel = (Logger::Level) *obj;
+			if (*obj != minLogLevel) {
+				printf("Changing log level to %s\n",
+						Logger::logLevelToName(*obj));
+			}
+			minLogLevel = *obj;
 		}
 	}
 	if (level <= minLogLevel) {
@@ -35,10 +49,15 @@ void Logger::log(Level level, char *src, char *fmt, ...) {
 SendableChooser *Logger::createLogLevelChooser() {
 	if (chooser == NULL) {
 		chooser = new SendableChooser();
-		for (int l = Logger::kSevere; l < Logger::kFinest; l++) {
-			chooser->AddObject(logLevelToName((Logger::Level) l), new int(l));
-		}
-		chooser->AddDefault(logLevelToName(Logger::kFinest), new int(Logger::kFinest));
+		chooser->AddDefault(logLevelToName(Logger::kFinest), &Logger::kFinest);
+		chooser->AddObject(logLevelToName(Logger::kFiner), &Logger::kFiner);
+		chooser->AddObject(logLevelToName(Logger::kFine), &Logger::kFine);
+		chooser->AddObject(logLevelToName(Logger::kConfig), &Logger::kConfig);
+		chooser->AddObject(logLevelToName(Logger::kInfo), &Logger::kInfo);
+		chooser->AddObject(logLevelToName(Logger::kDiagnostic),
+				&Logger::kDiagnostic);
+		chooser->AddObject(logLevelToName(Logger::kWarning), &Logger::kWarning);
+		chooser->AddObject(logLevelToName(Logger::kSevere), &Logger::kSevere);
 	}
 	return chooser;
 }
