@@ -86,7 +86,7 @@ void StallableMotor::updateController() {
 			}
 			if (!this->stalled) {
 				Logger::log(Logger::kWarning, "Stallable",
-						"\"%s\" is now stalled.", this->name);
+						"\"%s\" is now stalled @ %f.", this->name, rate);
 			}
 			this->stalled = true;
 		}
